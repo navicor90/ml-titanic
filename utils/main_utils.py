@@ -2,6 +2,15 @@
 
 import pandas as pd
 
+def group_by_with_main_metrics(df, gbcolumn, index, target):
+    gbdf = (df.groupby(gbcolumn)
+            .agg({index:'count',target:'sum'})
+            .rename_axis(gbcolumn)
+            .reset_index())
+    gbdf['share'] = gbdf[index]/gbdf[index].sum()
+    gbdf['target_rate'] = gbdf[target]/gbdf[index]
+    return gbdf
+
 def bin_rate(var, target, bins_number=5, bins = None):
     bsize = (var.max() - var.min())/bins_number
     
